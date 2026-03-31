@@ -1,44 +1,78 @@
 <!DOCTYPE html>
 <html>
+<head>
     <title>{{$title}}</title>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<head>
+
     <style>
-        .navbar {
+       .navbar {
             background-color: #ff5850;
             font-weight: bold;
         }
-        .nav-item a {
+
+        .nav-link {
             color: #fff !important;
         }
-        .navbar-nav {
-            margin: 0 auto;
-        }
+
+        /* GRID SÁCH */
         .list-book {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
         }
+
+        /* CARD */
         .book {
-            margin: 0;
             text-align: center;
         }
+
         .card {
-            transition: transform 0.3s;
+            height: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
         }
+
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
+
+        /* ẢNH SÁCH */
         .card-img-top {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
             padding: 10px;
         }
+
+        /* TEXT */
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            min-height: 40px;
+        }
+
+        .card-text {
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .list-book {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
             .list-book {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
         @media (max-width: 576px) {
             .list-book {
                 grid-template-columns: 1fr;
@@ -46,39 +80,89 @@
         }
     </style>
 </head>
+
 <body>
-    <header style='text-align:center'>
-        <img src="{{asset('images/banner_sach.jpg')}}" width="1000px">
+
+    {{-- NAVBAR --}}
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+
+            {{-- MENU TRÁI --}}
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('sach') }}">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('sach/theloai/1') }}">Tiểu thuyết</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('sach/theloai/2') }}">Truyện ngắn - tản văn</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('sach/theloai/3') }}">Tác phẩm kinh điển</a>
+                </li>
+                {{-- QUẢN LÝ SÁC --}}
+                @auth
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.books.index') }}">
+                            <i class="fas fa-book"></i> Quản lý sách
+                        </a>
+                    </li>
+                @endauth
+            </ul>
+
+            {{-- USER MENU PHẢI --}}
+            <ul class="navbar-nav ml-auto">
+                @auth
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                            {{ Auth::user()->name }}
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right">
+                            {{-- TẠM THỜI COMMENT VÌ CÂU 1 (CỦA BẠN KHÁC) CHƯA LÀM XONG --}}
+                            {{-- <a class="dropdown-item" href="{{ route('account') }}">Quản lý</a>
+                            <div class="dropdown-divider"></div> --}}
+                            
+                            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+                                @csrf
+                                <button class="dropdown-item" type="submit">
+                                    Đăng xuất
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                @else
+                    <li class="nav-item">
+                        <a href="{{ route('login') }}" class="btn btn-sm btn-primary mr-2">
+                            Đăng nhập
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('register') }}" class="btn btn-sm btn-success">
+                            Đăng ký
+                        </a>
+                    </li>
+                @endauth
+            </ul>
+
+        </div>
+    </nav>
+
+    {{-- BANNER --}}
+    <header class="text-center mt-2">
+        <img src="{{asset('images/banner_sach.jpg')}}" class="img-fluid">
     </header>
 
-    <main style="width:1000px; margin:2px auto;">
-        <div class='row'>
-            <div class='col-3 pr-0'>
-                <x-menu>
-                    <x-slot name='item'>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{{url('sach')}}">Trang chủ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{url('sach/theloai/1')}}">Tiểu thuyết</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{url('sach/theloai/2')}}">Truyện ngắn - tản văn</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{url('sach/theloai/3')}}">Tác phẩm kinh điển</a>
-                        </li>
-                    </x-slot>
-                </x-menu>
-
-                <img src="{{asset('images/sidebar_1.jpg')}}" width="100%" class='mt-1'>
-                <img src="{{asset('images/sidebar_2.jpg')}}" width="100%" class='mt-1'>
-            </div>
-
-            <div class='col-9'>
-                @yield('content')
-            </div>
-        </div>
+    {{-- CONTENT FULL --}}
+    <main class="container mt-3">
+        @yield('content')
     </main>
+
+    {{-- JS --}}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 </body>
 </html>
