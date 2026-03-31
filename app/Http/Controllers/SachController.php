@@ -42,5 +42,4 @@ class SachController extends Controller
         
         return view('show', compact('sach', 'title', 'sachCungTheLoai'));
     }
-    
 }
