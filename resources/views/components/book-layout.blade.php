@@ -68,6 +68,23 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{url('sach/theloai/3')}}">Tác phẩm kinh điển</a>
                         </li>
+                        <li class="nav-item mt-2">
+                            <div style='color:white;position:relative; padding-left:15px;' class='mr-2'>
+                                <div style='width:20px; height:20px;background-color:#23b85c; font-size:12px; border:none;
+                                border-radius:50%; position:absolute;left:35px;top:-5px; display:flex; align-items:center; justify-content:center;'
+                                id='cart-number-product'>
+                                    @if (session('cart'))
+                                        {{ count(session('cart')) }}
+                                    @else
+                                        0
+                                    @endif
+                                </div>
+                                <a href="{{route('order')}}" style='cursor:pointer;color:white;'>
+                                    <i class="fa fa-cart-arrow-down fa-2x mr-2 mt-2" aria-hidden="true"></i>
+                                    <span style="font-size:14px; margin-left:5px;">Giỏ hàng</span>
+                                </a>
+                            </div>
+                        </li>
                     </x-slot>
                 </x-menu>
 
